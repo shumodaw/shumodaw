@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>ШУМОДАВ!!!111 — МУЗЫКАЛЬНОЕ ОБЪЕДИНЕНИЕ</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="stars">★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★</div>
+
+<header>
+  <div class="blink">!!! ВЫ НА САЙТЕ ШУМОДАВА !!!</div>
+  <h1>ШУМОДАВ</h1>
+  <div class="under">МУЗЫКАЛЬНОЕ ОБЪЕДИНЕНИЕ И НЕ ТОЛЬКО</div>
+</header>
+
+<marquee scrollamount="13" direction="left">
+  ★★★ ДОБРО ПОЖАЛОВАТЬ ★★★ ТУТ ЕСТЬ МУЗЫКА ★★★ НЕ ТРОГАЙТЕ НАСТРОЙКИ ★★★
+  ШУМ ДОЛЖЕН БЫТЬ ГРОМКИМ ★★★ КРЫШКА ОТ ШВЕПСА МОЖЕТ СТАТЬ ВАШЕЙ ★★★
+</marquee>
+
+<table class="layout">
+<tr>
+<td class="sidebar">
+  <div class="box">
+    <h2>МЕНЮ</h2>
+    <a href="#home">ГЛАВНАЯ</a>
+    <a href="#news">НОВОСТИ!!!</a>
+    <a href="#music">МУЗЫКА</a>
+    <a href="#about">О НАС</a>
+    <a href="#guestbook">ГОСТЕВАЯ</a>
+    <a href="/admin">АДМИНКА</a>
+  </div>
+
+  <div class="box counter">
+    <h2>СЧЁТЧИК</h2>
+    <div>00001337</div>
+    <small>человек пострадало</small>
+  </div>
+
+  <div class="box">
+    <h2>ВАЖНО!!!</h2>
+    <p>Сайт лучше смотреть при разрешении 800×600.</p>
+    <p>Internet Explorer 6 — рекомендуется.</p>
+  </div>
+</td>
+
+<td class="main">
+  <section id="home" class="box hero">
+    <h2>ДОБРО ПОЖАЛОВАТЬ НА ОФИЦИАЛЬНЫЙ САЙТ ШУМОДАВА</h2>
+    <p class="huge">ЭТО НЕ САЙТ. ЭТО СОСТОЯНИЕ.</p>
+    <p>Если вы слышите тишину — проверьте колонки.</p>
+    <div class="construction">🚧 САЙТ ПОСТОЯННО СТРОИТСЯ 🚧</div>
+  </section>
+
+  <section id="news" class="box">
+    <h2>📢 ПОСЛЕДНИЕ НОВОСТИ 📢</h2>
+    <div id="news-list">ЗАГРУЗКА НОВОСТЕЙ...</div>
+  </section>
+
+  <section id="music" class="box">
+    <h2>💿 НАША МУЗЫКА 💿</h2>
+    <p>Скачивайте. Слушайте. Не спрашивайте почему.</p>
+    <div id="tracks">ПОИСК ФАЙЛОВ...</div>
+  </section>
+
+  <section id="about" class="box">
+    <h2>КТО МЫ</h2>
+    <p>ШУМОДАВ — это музыкальное объединение.</p>
+    <p>Мы создаём звуки, которые другие люди почему-то называют музыкой.</p>
+    <p class="red">НЕ ЯВЛЯЕТСЯ ОФИЦИАЛЬНЫМ САЙТОМ НИКАКОЙ ОРГАНИЗАЦИИ.</p>
+  </section>
+
+  <section id="guestbook" class="box">
+    <h2>ГОСТЕВАЯ КНИГА</h2>
+    <p>Напишите нам на голубиной почте.</p>
+    <p><a href="mailto:shumodav@example.com">shumodav@example.com</a></p>
+    <div class="fake-form">
+      Ваше имя: <input value="Аноним из интернета"><br>
+      Сообщение: <input value="ШУМОДАВ ЛУЧШИЕ!!!"><br>
+      <button onclick="alert('СПАСИБО. ВАШЕ СООБЩЕНИЕ УТЕРЯНО НАВСЕГДА.')">ОТПРАВИТЬ</button>
+    </div>
+  </section>
+</td>
+</tr>
+</table>
+
+<footer>
+  <div class="blink">© ШУМОДАВ 2004–2026 ВСЕ ПРАВА НЕ ЗАЩИЩЕНЫ</div>
+  <div>Made with Microsoft FrontPage* и болью</div>
+  <div>*мы врём</div>
+</footer>
+
+<script>
+async function loadNews() {
+  const el = document.getElementById("news-list");
+  try {
+    const news = await fetch("/api/news").then(r => r.json());
+    el.innerHTML = news.map(n => `
+      <div class="news">
+        <div class="news-date">${n.date}</div>
+        <div class="news-text">${escapeHtml(n.text)}</div>
+      </div>
+    `).join("");
+  } catch { el.textContent = "НОВОСТИ НЕ ЗАГРУЗИЛИСЬ. И ТАК СОЙДЁТ."; }
+}
+async function loadTracks() {
+  const el = document.getElementById("tracks");
+  try {
+    const tracks = await fetch("/api/tracks").then(r => r.json());
+    el.innerHTML = tracks.length ? tracks.map(t => `
+      <div class="track">
+        <b>♫ ${escapeHtml(t.name)}</b>
+        <audio controls src="${t.url}"></audio>
+      </div>
+    `).join("") : "<p>Пока музыки нет. АДМИН, ЗАГРУЗИ МУЗЫКУ.</p>";
+  } catch { el.textContent = "МУЗЫКА ПОТЕРЯЛАСЬ."; }
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+loadNews();
+loadTracks();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>АДМИНКА ШУМОДАВА!!!</title>
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<main>
+<h1>💀 АДМИНКА ШУМОДАВА 💀</h1>
+<p>Если вы не админ — уходите. Если админ — тоже можете уйти.</p>
+
+<section>
+<h2>1. ПАРОЛЬ ОТ ПОДВАЛА</h2>
+<input id="password" type="password" placeholder="shumodav">
+</section>
+
+<section>
+<h2>2. НОВАЯ НОВОСТЬ</h2>
+<textarea id="news" placeholder="ВНИМАНИЕ ИДЕТ РОЗЫГРЫШ КРЫШКИ ОТ ШВЕПСА"></textarea>
+<button onclick="addNews()">ВЫПУСТИТЬ НОВОСТЬ</button>
+</section>
+
+<section>
+<h2>3. ЗАГРУЗИТЬ МУЗЫКУ</h2>
+<input id="music" type="file" accept="audio/*">
+<button onclick="uploadMusic()">ЗАГРУЗИТЬ ШУМ</button>
+<p id="status"></p>
+</section>
+
+<section>
+<h2>ТЕКУЩИЕ НОВОСТИ</h2>
+<div id="current"></div>
+</section>
+
+<a href="/">← БЕЖАТЬ НА ГЛАВНУЮ</a>
+</main>
+
+<script>
+const pass = () => document.getElementById("password").value;
+async function addNews() {
+  const text = document.getElementById("news").value;
+  const r = await fetch("/api/news", {
+    method:"POST",
+    headers: {"Content-Type":"application/x-www-form-urlencoded", "x-admin-password":pass()},
+    body: new URLSearchParams({text})
+  });
+  const j = await r.json();
+  document.getElementById("status").textContent = j.ok ? "НОВОСТЬ ВЫПУЩЕНА!!!" : (j.error || "ОШИБКА");
+  document.getElementById("news").value = "";
+  load();
+}
+async function uploadMusic() {
+  const file = document.getElementById("music").files[0];
+  if (!file) return alert("СНАЧАЛА ВЫБЕРИ ФАЙЛ");
+  const fd = new FormData();
+  fd.append("music", file);
+  const r = await fetch("/api/upload", {
+    method:"POST",
+    headers: {"x-admin-password":pass()},
+    body: fd
+  });
+  const j = await r.json();
+  document.getElementById("status").textContent = j.ok ? "МУЗЫКА ЗАГРУЖЕНА!!!" : (j.error || "ОШИБКА");
+}
+async function load() {
+  const news = await fetch("/api/news").then(r=>r.json());
+  document.getElementById("current").innerHTML = news.map(n =>
+    `<div class="item"><b>${esc(n.text)}</b><br><small>${esc(n.date)}</small>
+    <button onclick="del(${n.id})">УДАЛИТЬ</button></div>`).join("");
+}
+async function del(id) {
+  await fetch("/api/news/"+id, {method:"DELETE", headers:{"x-admin-password":pass()}});
+  load();
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+load();
+</script>
+</body>
+</html>
