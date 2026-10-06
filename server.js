@@ -1,5 +1,6 @@
 const express=require('express');const multer=require('multer');const path=require('path');const{createClient}=require('@supabase/supabase-js');
-const app=express(),PORT=process.env.PORT||3000,PASS=process.env.ADMIN_PASSWORD||'shumodav',BUCKET=process.env.SUPABASE_BUCKET||'music';
+const app=express(),PORT=process.env.PORT||3000,PASS=process.env.ADMIN_PASSWORD ;if(!PASS){ console.error('НЕТ ADMIN_PASSWORD'); process.exit(1);}
+BUCKET=process.env.SUPABASE_BUCKET||'music';
 const URL=process.env.SUPABASE_URL,KEY=process.env.SUPABASE_SERVICE_ROLE_KEY;if(!URL||!KEY){console.error('НЕТ SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY');process.exit(1)}
 const db=createClient(URL,KEY,{auth:{persistSession:false,autoRefreshToken:false}});
 app.use(express.urlencoded({extended:true}));app.use(express.json());app.use(express.static(path.join(__dirname,'public')));
