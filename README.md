@@ -1,49 +1,13 @@
-# ШУМОДАВ — ужасный музыкальный сайт
+# ШУМОДАВ 2.0
 
-## Что тут есть
+## Render Environment
+SUPABASE_URL = Project URL
+SUPABASE_SERVICE_ROLE_KEY = Secret/service_role key (ТОЛЬКО в Render Environment)
+SUPABASE_BUCKET = music
+ADMIN_PASSWORD = свой пароль
 
-- главная страница в стиле «нижний интернет 2004 года»;
-- кислотный фон с Nyan Cat GIF (внешний GIF);
-- новости, которые редактируются через `/admin`;
-- загрузка MP3/WAV/OGG/FLAC/M4A/AAC;
-- встроенные плееры;
-- фальшивая гостевая книга, счётчик и прочий цифровой мусор.
+## Supabase
+Storage bucket: `music`, Public.
+Tables: `news`, `tracks`, `site_settings`.
 
-## Запуск
-
-Нужен Node.js 18+.
-
-```bash
-npm install
-npm start
-```
-
-После запуска открой:
-
-http://localhost:3000
-
-Админка:
-
-http://localhost:3000/admin
-
-Пароль по умолчанию:
-
-`shumodav`
-
-Для нормального сервера лучше задать свой пароль:
-
-Linux/macOS:
-```bash
-ADMIN_PASSWORD="ваш-пароль" npm start
-```
-
-Windows PowerShell:
-```powershell
-$env:ADMIN_PASSWORD="ваш-пароль"; npm start
-```
-
-Загруженные треки лежат в `uploads/`, новости — в `data.json`.
-
-## Важно
-
-В продакшене обязательно поставить reverse proxy (например, nginx), HTTPS, нормальную авторизацию и ограничение размера/типа файлов. Сейчас это специально маленький и простой проект для своего сервера.
+После добавления файлов в GitHub Render автоматически задеплоит новую версию.
